@@ -370,8 +370,7 @@ class ChangeList(object):
                     if lookup_needs_distinct(self.lookup_opts, search_spec):
                         use_distinct = True
                         break
-
-        if use_distinct:
+        if use_distinct and False:
             return qs.distinct()
         else:
             return qs
