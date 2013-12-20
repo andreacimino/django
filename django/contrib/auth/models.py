@@ -20,7 +20,7 @@ from django.contrib.auth.hashers import (
 from django.contrib.auth.signals import user_logged_in
 from django.contrib.contenttypes.models import ContentType
 from django.utils.encoding import python_2_unicode_compatible
-
+import caching.base
 
 def update_last_login(sender, user, **kwargs):
     """
@@ -167,7 +167,7 @@ class BaseUserManager(models.Manager):
         return self.get(**{self.model.USERNAME_FIELD: username})
 
 
-class UserManager(BaseUserManager):
+class UserManager(caching.base.CachingManager, BaseUserManager):
 
     def create_user(self, username, email=None, password=None, **extra_fields):
         """
@@ -366,7 +366,7 @@ class PermissionsMixin(models.Model):
         return _user_has_module_perms(self, app_label)
 
 
-class AbstractUser(AbstractBaseUser, PermissionsMixin):
+class AbstractUser(AbstractBaseUser, PermissionsMixin, caching.base.CachingMixin):
     """
     An abstract base class implementing a fully featured User model with
     admin-compliant permissions.
